@@ -1,6 +1,7 @@
 package com.electronic.store.electronicstore.controllers;
 
 import com.electronic.store.electronicstore.dtos.UserDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.electronic.store.electronicstore.service.interfaces.UserService;
@@ -15,19 +16,22 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    public UserDto registerUser(@RequestBody UserDto userDto) {
-        // Logic to register a new user
+    public UserDto registerUser(@Valid @RequestBody UserDto userDto) {
         return userService.createUser(userDto);
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUserById(@PathVariable int userId) {
+    public UserDto getUserById(@PathVariable String userId) {
         return userService.getUserById(userId);
     }
 
     @GetMapping("/getAllUsers")
-    public List<UserDto> getAllUsers(){
-        return userService.getAllUsers();
+    public List<UserDto> getAllUsers(
+            @RequestParam(value="pageNumber", defaultValue ="0", required = false ) int pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = "0",required = false) int pageSize,
+            @RequestParam(value="sortBy", defaultValue ="name", required = false ) String sortBy,
+            @RequestParam(value = "sortByDir", defaultValue = "ASC",required = false) String sortByDir){
+        return userService.getAllUsers(pageNumber,pageSize,sortBy,sortByDir);
     }
 
     @GetMapping("/getUsersbyEmail/{email}")
@@ -36,17 +40,17 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteUserById(@PathVariable int id){
+    public void deleteUserById(@PathVariable String id){
         userService.delete(id);
     }
 
     @PutMapping("/update/{id}")
-    public void updateUser(@RequestBody UserDto userDto,@PathVariable int id){
+    public void updateUser(@Valid  @RequestBody UserDto userDto, @PathVariable String id){
         userService.updateUser(userDto,id);
     }
 
     @GetMapping("/exists/{id}")
-    public boolean userExists(@PathVariable int id){
+    public boolean userExists(@PathVariable String id){
         return userService.userExists(id);
     }
 

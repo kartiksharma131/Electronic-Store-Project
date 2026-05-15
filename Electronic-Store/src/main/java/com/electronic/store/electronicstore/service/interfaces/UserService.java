@@ -9,22 +9,22 @@ public interface UserService {
     UserDto createUser(UserDto userDto);
 
     //update
-    void updateUser(UserDto userDto,int userId);
+    void updateUser(UserDto userDto,String userId);
 
     //delete
-    void delete(int userId);
+    void delete(String userId);
 
     //get all Users
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers(int pageNumber,int  pageSize, String sortBy, String sortByDir);
 
     //get single user by ID
-    UserDto getUserById(int userId);
+    UserDto getUserById(String userId);
 
     //get single user by email
     UserDto getUserByEmail(String userEmail);
 
     //search user
-    boolean userExists(int id);
+    boolean userExists(String id);
 
     //other features
 }

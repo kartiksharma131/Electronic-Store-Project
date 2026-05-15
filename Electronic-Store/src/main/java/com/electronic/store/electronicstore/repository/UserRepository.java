@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface UserRepository extends JpaRepository<User,String> {
     User findByEmail(String email);
 
     @Modifying
@@ -21,6 +21,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
             u.role = :#{#user.role}
         where u.userId = :userId
     """)
-    void updateUser(@Param("user") User user, @Param("userId") int userId);
+    void updateUser(@Param("user") User user, @Param("userId") String userId);
 
 }
