@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
-    List<Product> findByTitleContaining(String subTitle);
 
-    List<Product> findAllByLiveTrue();
+    // Change this method name to match the "isLive" field:
+    List<Product> findAllByIsLiveTrue();
 
     List<Product> findAllByDiscountPercentageGreaterThan(double discountPercentage);
+
+    List<Product> findByTitleContaining(String title);
 }

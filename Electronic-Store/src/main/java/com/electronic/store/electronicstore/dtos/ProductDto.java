@@ -1,14 +1,13 @@
 package com.electronic.store.electronicstore.dtos;
 
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -20,27 +19,27 @@ public class ProductDto {
 
     private String id;
 
-    @Size(min = 4, max = 100, message = "Product title must be between 4 and 100 characters")
+    @NotBlank(message = "Title cannot be blank")
+    @Size(min = 3, max = 100, message = "Title must be between 3 and 100 characters")
     private String title;
 
-    @Size(min = 10, max = 500, message = "Product description must be between 10 and 500 characters")
+    @NotBlank(message = "Description cannot be blank")
+    @Size(min = 10, max = 500, message = "Description must be between 10 and 500 characters")
     private String description;
 
-    @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
-    private  double price;
+    @Positive(message = "Price must be positive")
+    private double price;
 
-    @Min(value = 0, message = "Quantity cannot be negative")
+    @Positive(message = "Quantity must be positive")
     private int quantity;
 
+    private Boolean isLive;
 
-    private boolean isLive;
+    private Boolean inStock;
 
-    private boolean inStock;
-
-    @DateTimeFormat(pattern = "dd-mm-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date addedDate;
 
-    @DecimalMin(value = "0.0", inclusive = true, message = "Discount percentage cannot be negative")
-    @DecimalMax(value = "100.0", inclusive = true, message = "Discount percentage cannot be greater than 100")
+    @Positive(message = "Discount percentage must be positive")
     private double discountPercentage;
 }

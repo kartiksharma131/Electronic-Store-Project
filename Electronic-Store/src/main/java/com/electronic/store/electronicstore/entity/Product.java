@@ -1,8 +1,8 @@
 package com.electronic.store.electronicstore.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,19 +21,30 @@ public class Product {
     @Id
     private String id;
 
+    @NotBlank
+    @Column(name = "title", length = 100, nullable = false)
     private String title;
 
+    @NotBlank
+    @Column(name = "description", length = 500, nullable = false)
     private String description;
 
-    private  double price;
+    @Column(name = "price", nullable = false)
+    private double price;
 
+    @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    private boolean isLive;
+    @Column(name = "is_live")
+    private Boolean isLive;
 
-    private boolean inStock;
+    @Column(name = "in_stock")
+    private Boolean inStock;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @Column(name = "added_date")
     private Date addedDate;
 
+    @Column(name = "discount_percentage")
     private double discountPercentage;
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -21,29 +22,46 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto createProduct(ProductDto productDto) {
-        Product product = productRepository.save(dtoToEntity(productDto));
-        return entityToDto(product);
+        UUID uuid = UUID.randomUUID();
+        productDto.setId(uuid.toString());
+        Product product = dtoToEntity(productDto);
+        Product savedProduct = productRepository.save(product);
+        return entityToDto(savedProduct);
     }
 
     @Override
     public ProductDto updateProduct(ProductDto productDto, String id) {
-        Product existingProduct = productRepository.findById(id).orElseThrow(()-> new RuntimeException("Product not found with id: "+id));
-        if(existingProduct!=null){
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+
+        // Update only non-null fields (partial update pattern)
+        if (productDto.getTitle() != null) {
             existingProduct.setTitle(productDto.getTitle());
+        }
+        if (productDto.getDescription() != null) {
             existingProduct.setDescription(productDto.getDescription());
+        }
+        if (productDto.getPrice() > 0) {
             existingProduct.setPrice(productDto.getPrice());
+        }
+        if (productDto.getQuantity() > 0) {
             existingProduct.setQuantity(productDto.getQuantity());
-            existingProduct.setLive(productDto.isLive());
-            existingProduct.setInStock(productDto.isInStock());
+        }
+        if (productDto.getIsLive() != null) {
+            existingProduct.setIsLive(productDto.getIsLive());
+        }
+        if (productDto.getInStock() != null) {
+            existingProduct.setInStock(productDto.getInStock());
+        }
+        if (productDto.getAddedDate() != null) {
             existingProduct.setAddedDate(productDto.getAddedDate());
+        }
+        if (productDto.getDiscountPercentage() >= 0) {
             existingProduct.setDiscountPercentage(productDto.getDiscountPercentage());
-            Product updatedProduct = productRepository.save(existingProduct);
-            return entityToDto(updatedProduct);
         }
-        else{
-            Product newProduct = productRepository.save(dtoToEntity(productDto));
-            return entityToDto(newProduct);
-        }
+
+        Product updatedProduct = productRepository.save(existingProduct);
+        return entityToDto(updatedProduct);
     }
 
     @Override
@@ -53,9 +71,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDto> getAllLiveProducts() {
-        List<Product> liveProductList = productRepository.findAllByLiveTrue();
+        // Update the method call here:
+        List<Product> liveProductList = productRepository.findAllByIsLiveTrue();
         return liveProductList.stream().map(product -> entityToDto(product)).toList();
     }
+
 
     @Override
     public List<ProductDto> getAllProducts() {
@@ -65,7 +85,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDto getSingleProduct(String productId) {
-        Product product = productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product not found with id: "+productId));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productId));
         return entityToDto(product);
     }
 
@@ -88,8 +109,8 @@ public class ProductServiceImpl implements ProductService {
         productDto.setDescription(product.getDescription());
         productDto.setPrice(product.getPrice());
         productDto.setQuantity(product.getQuantity());
-        productDto.setLive(product.isLive());
-        productDto.setInStock(product.isInStock());
+        productDto.setIsLive(product.getIsLive());
+        productDto.setInStock(product.getInStock());
         productDto.setAddedDate(product.getAddedDate());
         productDto.setDiscountPercentage(product.getDiscountPercentage());
         return productDto;
@@ -102,8 +123,8 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
         product.setQuantity(productDto.getQuantity());
-        product.setLive(productDto.isLive());
-        product.setInStock(productDto.isInStock());
+        product.setIsLive(productDto.getIsLive());
+        product.setInStock(productDto.getInStock());
         product.setAddedDate(productDto.getAddedDate());
         product.setDiscountPercentage(productDto.getDiscountPercentage());
         return product;
