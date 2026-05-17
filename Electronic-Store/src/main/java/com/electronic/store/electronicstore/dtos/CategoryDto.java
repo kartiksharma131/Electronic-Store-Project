@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,4 +23,6 @@ public class CategoryDto {
 
     @Size(min = 10, max = 300, message = "Category description must be between 10 and 300 characters")
     private String description;
+
+    private List<ProductDto> productDtoList;
 }

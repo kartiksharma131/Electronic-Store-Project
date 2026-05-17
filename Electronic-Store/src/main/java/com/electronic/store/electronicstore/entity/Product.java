@@ -47,4 +47,7 @@ public class Product {
 
     @Column(name = "discount_percentage")
     private double discountPercentage;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Category category;
 }

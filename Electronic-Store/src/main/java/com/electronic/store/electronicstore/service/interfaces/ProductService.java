@@ -28,4 +28,8 @@ public interface ProductService {
 
     //search product by title
     List<ProductDto> searchProductByTitle(String title);
+
+    ProductDto createWithCategory(ProductDto productDto, String categoryId);
+
+    ProductDto addCategoryToProduct(String productId, String categoryId);
 }

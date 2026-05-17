@@ -1,6 +1,8 @@
 package com.electronic.store.electronicstore.controllers;
 
+import com.electronic.store.electronicstore.dtos.CategoryDto;
 import com.electronic.store.electronicstore.dtos.ProductDto;
+import com.electronic.store.electronicstore.service.interfaces.CategoryService;
 import com.electronic.store.electronicstore.service.interfaces.ProductService;
 import com.electronic.store.electronicstore.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ public class ProductController {
 
     @Autowired
     ProductService productService;
+
 
     @PostMapping("/create")
     public ProductDto createProduct(@RequestBody ProductDto productDto){
@@ -54,5 +57,15 @@ public class ProductController {
     @GetMapping("/searchProductsByTitle/{subtitle}")
     public List<ProductDto> searchProductsByTitle(@PathVariable String subtitle) {
         return productService.searchProductByTitle(subtitle);
+    }
+
+    @PostMapping("/createWithCategory/{categoryId}")
+    public ProductDto addCategoryToProduct(@RequestBody ProductDto productDto,@PathVariable String categoryId){
+        return productService.createWithCategory(productDto,categoryId);
+    }
+
+    @PutMapping("addCategoryToProduct/{productId}/{categoryId}")
+    public ProductDto addCategoryToProduct(@PathVariable String productId, @PathVariable String categoryId){
+        return productService.addCategoryToProduct(productId, categoryId);
     }
 }

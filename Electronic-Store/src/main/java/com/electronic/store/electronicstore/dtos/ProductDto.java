@@ -1,5 +1,6 @@
 package com.electronic.store.electronicstore.dtos;
 
+import com.electronic.store.electronicstore.entity.Category;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
@@ -42,4 +43,6 @@ public class ProductDto {
 
     @Positive(message = "Discount percentage must be positive")
     private double discountPercentage;
+
+    private CategoryDto categoryDto;
 }
